@@ -1,0 +1,264 @@
+MariaDB [(none)]> create database Jakub_Tabor;
+Query OK, 1 row affected (0.00 sec)
+
+MariaDB [(none)]> use Jakub_Tabor;
+Database changed
+MariaDB [Jakub_Tabor]> CREATE TABLE pracownicy (
+    -> id int auto_increment PRIMARY KEY,
+    -> imie text,
+    -> nazwisko text,
+    -> miasto text default 'Krakow');
+ERROR 1101 (42000): BLOB/TEXT column 'miasto' can't have a default value
+MariaDB [Jakub_Tabor]> CREATE TABLE pracownicy (
+    -> id int auto_increment PRIMARY KEY,
+    -> imie text,
+    -> nazwisko text,
+    -> miasto varchar(30) default 'Krakow');
+Query OK, 0 rows affected (0.19 sec)
+
+MariaDB [Jakub_Tabor]> describe table pracownicy;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'table pracownicy' at line 1
+MariaDB [Jakub_Tabor]> describe pracownicy;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| id       | int(11)     | NO   | PRI | NULL    | auto_increment |
+| imie     | text        | YES  |     | NULL    |                |
+| nazwisko | text        | YES  |     | NULL    |                |
+| miasto   | varchar(30) | YES  |     | Krakow  |                |
++----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.02 sec)
+
+MariaDB [Jakub_Tabor]> INSERT INTO pracownicy VALUES(,Kuba,Tabor,);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'Kuba,Tabor,)' at line 1
+MariaDB [Jakub_Tabor]> INSERT INTO pracownicy(imie,nazwisko) VALUES('Kuba','Tabor');
+Query OK, 1 row affected (0.08 sec)
+
+MariaDB [Jakub_Tabor]> ALTER TABLE pracownicy ADD data_ur data AFTER nazwisko;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'data AFTER nazwisko' at line 1
+MariaDB [Jakub_Tabor]> ALTER TABLE pracownicy ADD data_ur date AFTER nazwisko;
+Query OK, 0 rows affected (0.23 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [Jakub_Tabor]> ALTER TABLE pracownicy CHANGE miasto adres varchar(20);
+Query OK, 1 row affected (0.47 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+MariaDB [Jakub_Tabor]> ALTER TABLE pracownicy RENAME osoba;
+Query OK, 0 rows affected (0.11 sec)
+
+MariaDB [Jakub_Tabor]> describe osoba
+    -> ;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| id       | int(11)     | NO   | PRI | NULL    | auto_increment |
+| imie     | text        | YES  |     | NULL    |                |
+| nazwisko | text        | YES  |     | NULL    |                |
+| data_ur  | date        | YES  |     | NULL    |                |
+| adres    | varchar(20) | YES  |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+MariaDB [Jakub_Tabor]> create database zadanie2;
+Query OK, 1 row affected (0.01 sec)
+
+MariaDB [Jakub_Tabor]> use zadanie2;
+Database changed
+MariaDB [zadanie2]> source lista.sql.txt;
+Query OK, 0 rows affected (0.17 sec)
+
+Query OK, 114 rows affected (0.06 sec)
+Records: 114  Duplicates: 0  Warnings: 0
+
+MariaDB [zadanie2]> describe pracownicy;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| id             | int(3)      | YES  |     | NULL    |       |
+| nazwisko       | varchar(12) | YES  |     | NULL    |       |
+| imie           | varchar(11) | YES  |     | NULL    |       |
+| stanowisko     | varchar(25) | YES  |     | NULL    |       |
+| dzial          | varchar(11) | YES  |     | NULL    |       |
+| sekcja         | varchar(8)  | YES  |     | NULL    |       |
+| pensja         | int(6)      | YES  |     | NULL    |       |
+| dni_zwolnienia | int(2)      | YES  |     | NULL    |       |
+| dni_urlopu     | int(2)      | YES  |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+9 rows in set (0.02 sec)
+
+MariaDB [zadanie2]> SELECT imie, nazwisko FROM pracownicy WHERE dzial LIKE "Reklama";
++-----------+-------------+
+| imie      | nazwisko    |
++-----------+-------------+
+| Amanda    | Koszewska   |
+| Robert    | Czerwinski  |
+| Helena    | Urbanczyk   |
+| Wieslawa  | Kozikowska  |
+| Pawel     | Grabowski   |
+| Melisa    | Chrzanowska |
+| Katarzyna | Pacula      |
+| Piotr     | Beneka      |
++-----------+-------------+
+8 rows in set (0.00 sec)
+
+MariaDB [zadanie2]> SELECT imie, nazwisko, dni_zwolnienia,dni_urlopu FROM pracownicy WHERE dzial LIKE "Reklama" and (dni_urlopu>20 or dni_zwolnienia>20);
++--------+-------------+----------------+------------+
+| imie   | nazwisko    | dni_zwolnienia | dni_urlopu |
++--------+-------------+----------------+------------+
+| Amanda | Koszewska   |              3 |         32 |
+| Robert | Czerwinski  |              2 |         21 |
+| Helena | Urbanczyk   |             28 |         28 |
+| Melisa | Chrzanowska |              2 |         21 |
++--------+-------------+----------------+------------+
+4 rows in set (0.00 sec)
+
+MariaDB [zadanie2]> SELECT imie, stanowisko FROM pracownicy WHERE stanowisko NOT LIKE "Sprzedaz" or "Reklama" and (imie LIKE "k%" or LIKE "a%");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'LIKE "a%")' at line 1
+MariaDB [zadanie2]> SELECT * FROM pracownicy WHERE dzial <> "Sprzeda¾" and dzial<> "Reklama" and nazwisko LIKE "k%" or nazwisko LIKE "a%";
++------+--------------+-----------+---------------------------+-------------+----------+--------+----------------+------------+
+| id   | nazwisko     | imie      | stanowisko                | dzial       | sekcja   | pensja | dni_zwolnienia | dni_urlopu |
++------+--------------+-----------+---------------------------+-------------+----------+--------+----------------+------------+
+|    5 | Andrychowicz | Felicja   | Asystent admin.           | Admin.      | Kopiarek |  23212 |              3 |         32 |
+|   38 | Kieslowski   | Piotr     | Asystent admin.           | Inz.-Techn. | Faxow    |  29983 |              4 |         42 |
+|   42 | Kowalska     | Helena    | Technik                   | Inz.-Techn. | Faxow    |  30411 |              2 |         24 |
+|   43 | Krawczyk     | Zygmunt   | Ksiegowy                  | Ksiegowosc  | Drukarek |  30452 |              2 |         21 |
+|   76 | Adamiec      | Marcin    | Sprzedawca                | Sprzedaz    | Faxow    |  46486 |              2 |         21 |
+|   88 | Aniol        | Gorzegorz | Spec. d/s oprog.          | Inz.-Techn. | Kopiarek |  56177 |              6 |          7 |
+|   97 | Anczewski    | Stefan    | Glowny inzynier           | Inz.-Techn. | Drukarek |  61856 |              8 |          9 |
+|  100 | Kacprzak     | Krzysztof | Specjalista d/s naukowych | Zarzadzania | Drukarek |  64738 |             30 |         32 |
+|  101 | Kopernik     | Wieslaw   | Kierownik biura           | Admin.      | Drukarek |  65822 |              8 |         79 |
++------+--------------+-----------+---------------------------+-------------+----------+--------+----------------+------------+
+9 rows in set (0.00 sec)
+
+MariaDB [zadanie2]> select * from pracownicy;
++------+--------------+-------------+---------------------------+-------------+----------+--------+----------------+------------+
+| id   | nazwisko     | imie        | stanowisko                | dzial       | sekcja   | pensja | dni_zwolnienia | dni_urlopu |
++------+--------------+-------------+---------------------------+-------------+----------+--------+----------------+------------+
+|    1 | Blazejczyk   | Donald      | Mlodszy technik           | Inz.-Techn. | Faxow    |  21304 |              6 |         63 |
+|    2 | Lubaszka     | Krzysztof   | Asystent ksieg.           | Ksiegowosc  | Kopiarek |  21888 |              1 |         11 |
+|    3 | Piwonski     | Robert      | Asystent admin.           | Inz.-Techn. | Drukarek |  23036 |              1 |          5 |
+|    4 | Galaszewska  | Anna        | Asystent admin.           | Inz.-Techn. | Faxow    |  23036 |              2 |         21 |
+|    5 | Andrychowicz | Felicja     | Asystent admin.           | Admin.      | Kopiarek |  23212 |              3 |         32 |
+|    6 | Wachowicz    | Janusz      | Asystent admin.           | Admin.      | Kopiarek |  23212 |              2 |         24 |
+|    7 | Koszewska    | Amanda      | Asystent projektanta      | Reklama     | Drukarek |  23239 |              3 |         32 |
+|    8 | Czerwinski   | Robert      | Asystent projektanta      | Reklama     | Faxow    |  23239 |              2 |         21 |
+|    9 | Jasiewicz    | Czeslaw     | Asystent admin.           | Admin.      | Faxow    |  24180 |              5 |         53 |
+|   10 | Sienkiewicz  | Andrzej     | Mlodszy technik           | Inz.-Techn. | Kopiarek |  24854 |              4 |         42 |
+|   11 | Semeniuk     | Zygmunt     | Asystent admin.           | Admin.      | Drukarek |  25147 |              9 |          9 |
+|   10 | Wojtyra      | Wojciech    | Asystent admin.           | Inz.-Techn. | Drukarek |  25147 |              1 |         11 |
+|   13 | Urbanczyk    | Helena      | Asystent projektanta      | Reklama     | Kopiarek |  25176 |             28 |         28 |
+|   14 | Nadwislanska | lucja       | Sekretarka zespolu        | Sprzedaz    | Kopiarek |  26041 |              7 |          7 |
+|   15 | Murawska     | Urszula     | Ksiegowy                  | Ksiegowosc  | Kopiarek |  26101 |              8 |          9 |
+|   16 | Lubanska     | Irena       | Asystent admin.           | Admin.      | Faxow    |  26114 |              2 |         16 |
+|   17 | Hubertus     | Marek       | Mlodszy ksiegowy.         | Ksiegowosc  | Drukarek |  26646 |             10 |         11 |
+|   18 | Naparstek    | Monika      | Asystent admin.           | Sprzedaz    | Faxow    |  27081 |             12 |         13 |
+|   19 | Nieweglowski | Krzysztof   | Asystent admin.           | Admin.      | Faxow    |  27081 |              8 |          9 |
+|   20 | Jedruszczak  | Konrad      | Asystent admin.           | Admin.      | Kopiarek |  27081 |              5 |         53 |
+|   21 | BReklamaosz  | Franciszek  | Mlodszy ksiegowy.         | Ksiegowosc  | Faxow    |  27598 |             10 |         11 |
+|   22 | Gorecki      | Henryk      | Mlodszy ksiegowy.         | Ksiegowosc  | Kopiarek |  27598 |             11 |         12 |
+|   23 | Damska       | Teresa      | Sekretarka zespolu        | Zarzadzania | Drukarek |  28044 |             20 |         21 |
+|   24 | Graniecka    | Malgorzata  | Sekretarka zespolu        | Sprzedaz    | Drukarek |  28044 |              3 |         32 |
+|   25 | Ochocka      | Anna        | Sekretarka zespolu        | Ksiegowosc  | Drukarek |  28044 |              3 |         32 |
+|   26 | Gregoruk     | Zofia       | Sekretarka zespolu        | Zarzadzania | Faxow    |  28044 |              8 |          8 |
+|   27 | Mazowiecka   | Dagmara     | Sekretarka zespolu        | Ksiegowosc  | Kopiarek |  28044 |              4 |         39 |
+|   28 | Wegier       | Barbara     | Mlodszy technik           | Inz.-Techn. | Drukarek |  28405 |             10 |         11 |
+|   29 | Bielak       | Tadeusz     | Mlodszy ksiegowy.         | Ksiegowosc  | Drukarek |  28550 |              5 |         47 |
+|   30 | Kozikowska   | Wieslawa    | Projektant                | Reklama     | Kopiarek |  28859 |             18 |         19 |
+|   31 | Filipek      | Bogdan      | Asystent admin.           | Sprzedaz    | Kopiarek |  29015 |              1 |         11 |
+|   32 | Miekus       | Joanna      | Sekretarka zespolu        | Ksiegowosc  | Faxow    |  29045 |             30 |         32 |
+|   33 | Terlecki     | Oktawian    | Technik                   | Inz.-Techn. | Drukarek |  29362 |              2 |         21 |
+|   34 | Figura       | Izolda      | Technik                   | Inz.-Techn. | Faxow    |  29362 |              3 |         26 |
+|   35 | Zalewski     | Augustyn    | Technik                   | Inz.-Techn. | Kopiarek |  29362 |              5 |         47 |
+|   36 | Dykiel       | Teresa      | Asystent admin.           | Sprzedaz    | Drukarek |  29983 |              2 |         24 |
+|   37 | Milewska     | Ewa         | Asystent admin.           | Admin.      | Drukarek |  29983 |              1 |          5 |
+|   38 | Kieslowski   | Piotr       | Asystent admin.           | Inz.-Techn. | Faxow    |  29983 |              4 |         42 |
+|   39 | Duszczyk     | Slawomir    | Asystent admin.           | Inz.-Techn. | Kopiarek |  29983 |              1 |          8 |
+|   40 | Grabowski    | Pawel       | Projektant                | Reklama     | Kopiarek |  30014 |              7 |          8 |
+|   41 | Wanad        | Teodor      | Technik                   | Inz.-Techn. | Drukarek |  30411 |              6 |          7 |
+|   42 | Kowalska     | Helena      | Technik                   | Inz.-Techn. | Faxow    |  30411 |              2 |         24 |
+|   43 | Krawczyk     | Zygmunt     | Ksiegowy                  | Ksiegowosc  | Drukarek |  30452 |              2 |         21 |
+|   44 | Ostrowska    | Barbara     | Sekretarka zespolu        | Zarzadzania | Kopiarek |  31048 |              2 |         16 |
+|   45 | Dudek        | Izabela     | Mlodszy technik           | Inz.-Techn. | Drukarek |  31068 |              8 |          8 |
+|   46 | Rosiak       | Danuta      | Ksiegowy                  | Ksiegowosc  | Kopiarek |  31539 |              5 |         53 |
+|   47 | Graczynski   | Jan         | Sprzedawca                | Sprzedaz    | Kopiarek |  31914 |              4 |         42 |
+|   48 | Jasinska     | Barbara     | Asystent admin.           | Sprzedaz    | Drukarek |  31917 |              7 |          8 |
+|   49 | Weiss        | Roza        | Ksiegowy                  | Ksiegowosc  | Drukarek |  32627 |              3 |         32 |
+|   50 | Wolej        | Aneta       | Asystent admin.           | Admin.      | Faxow    |  32884 |              4 |         42 |
+|   51 | Ciechowska   | Monika      | Sekretarka zespolu        | Sprzedaz    | Drukarek |  33051 |              1 |         11 |
+|   52 | Szelest      | Mieczyslawa | Sekretarka zespolu        | Inz.-Techn. | Kopiarek |  33051 |              5 |         47 |
+|   53 | Melnik       | Jan         | Mlodszy sprzedawca        | Sprzedaz    | Kopiarek |  33301 |             10 |         11 |
+|   54 | Rogowska     | Irena       | Spec. d/s oprog.          | Inz.-Techn. | Kopiarek |  34002 |              1 |          8 |
+|   55 | Feler        | Izabela     | Technik                   | Inz.-Techn. | Drukarek |  34605 |             28 |         30 |
+|   56 | Siedlecki    | Daniel      | Technik                   | Zarzadzania | Drukarek |  34605 |              7 |          8 |
+|   57 | Slomczynski  | Piotr       | Mlodszy sprzedawca        | Sprzedaz    | Faxow    |  34689 |             11 |         11 |
+|   58 | Linus        | Maciej      | Spec. d/s oprog.          | Inz.-Techn. | Faxow    |  35480 |              2 |         16 |
+|   59 | Chrzanowska  | Melisa      | Projektant                | Reklama     | Drukarek |  35785 |              2 |         21 |
+|   60 | Lechowicz    | Stanislaw   | Asystent admin.           | Admin.      | Drukarek |  35786 |              2 |         21 |
+|   60 | Janiszewska  | Barbara     | Ksiegowy                  | Ksiegowosc  | Faxow    |  35889 |              5 |         53 |
+|   62 | Filipowicz   | Jolanta     | Sprzedawca                | Sprzedaz    | Kopiarek |  35989 |              4 |         39 |
+|   63 | Pacula       | Katarzyna   | Projektant                | Reklama     | Faxow    |  36940 |              6 |          7 |
+|   64 | Zaluski      | Marek       | Sprzedawca                | Sprzedaz    | Faxow    |  37489 |              5 |         47 |
+|   65 | Soplica      | Edward      | Specjalista d/s naukowych | Zarzadzania | Faxow    |  37896 |              3 |         26 |
+|   66 | Beneka       | Piotr       | Projektant                | Reklama     | Faxow    |  38094 |             18 |         19 |
+|   67 | Sekocinska   | Elwira      | Technik                   | Inz.-Techn. | Drukarek |  40897 |              5 |         53 |
+|   68 | Maczynska    | Olga        | Specjalista d/s naukowych | Zarzadzania | Kopiarek |  41053 |              4 |         42 |
+|   69 | Krasiczynska | Grazyna     | Sprzedawca                | Sprzedaz    | Kopiarek |  41987 |              6 |         63 |
+|   70 | Cieslak      | Maria       | Spec. d/s oprog.          | Inz.-Techn. | Drukarek |  42872 |             15 |         16 |
+|   71 | Pankiewicz   | Iza         | Inzynier mechanik         | Inz.-Techn. | Drukarek |  43394 |              8 |          8 |
+|   72 | Ciechowska   | Natalia     | Sprzedawca                | Sprzedaz    | Drukarek |  43487 |              2 |         16 |
+|   73 | Salezy       | Dariusz     | Spec. d/s oprog.          | Inz.-Techn. | Drukarek |  44351 |              6 |          7 |
+|   74 | Celejewski   | Jerzy       | Spec. d/s oprog.          | Inz.-Techn. | Kopiarek |  44351 |             12 |         13 |
+|   75 | Wolski       | Pawel       | Inzynier mechanik         | Inz.-Techn. | Kopiarek |  46387 |              3 |         32 |
+|   76 | Adamiec      | Marcin      | Sprzedawca                | Sprzedaz    | Faxow    |  46486 |              2 |         21 |
+|   77 | Fedoruk      | Dorota      | Ksiegowy                  | Ksiegowosc  | Faxow    |  47853 |              3 |         32 |
+|   78 | Reszczynski  | Robert      | Inzynier mechanik         | Inz.-Techn. | Drukarek |  47883 |              4 |         39 |
+|   79 | Grzeszczak   | Wojciech    | Sprzedawca                | Sprzedaz    | Faxow    |  47986 |              3 |         26 |
+|   80 | Mianowska    | Wanda       | Spec. d/s oprog.          | Inz.-Techn. | Faxow    |  48786 |              9 |         10 |
+|   81 | Mikolajczyk  | Grazyna     | Sprzedawca                | Sprzedaz    | Drukarek |  49485 |             14 |         15 |
+|   82 | Chojnacki    | Leslaw      | Starszy inzynier          | Inz.-Techn. | Faxow    |  50651 |             11 |         11 |
+|   83 | Jasinska     | Janina      | Mlodszy sprzedawca        | Sprzedaz    | Drukarek |  51340 |              5 |         47 |
+|   84 | Persinski    | Antoni      | Glowny inzynier           | Inz.-Techn. | Faxow    |  51879 |             14 |         15 |
+|   85 | Miejska      | Ewelina     | Specjalista d/s naukowych | Zarzadzania | Drukarek |  53685 |             10 |         11 |
+|   86 | Dziwulski    | Juliusz     | Starszy inzynier          | Inz.-Techn. | Drukarek |  53721 |              3 |         32 |
+|   87 | Lichwiarz    | Janusz      | Spec. d/s oprog.          | Inz.-Techn. | Drukarek |  56177 |             20 |         21 |
+|   88 | Aniol        | Gorzegorz   | Spec. d/s oprog.          | Inz.-Techn. | Kopiarek |  56177 |              6 |          7 |
+|   89 | Barcisz      | Patrycja    | Kierownik naukowy         | Zarzadzania | Faxow    |  57756 |              2 |         21 |
+|   90 | Tkaczyk      | Zygmunt     | Mlodszy sprzedawca        | Sprzedaz    | Drukarek |  58278 |              2 |         16 |
+|   91 | Klosinski    | Cezary      | Mlodszy sprzedawca        | Sprzedaz    | Kopiarek |  58278 |              6 |          6 |
+|   92 | Siennicki    | Mikolaj     | Starszy inzynier          | Inz.-Techn. | Drukarek |  58326 |              3 |         32 |
+|   93 | Boronski     | Jerzy       | Inzynier mechanik         | Inz.-Techn. | Faxow    |  58358 |              8 |          8 |
+|   94 | Gorski       | Aleksander  | Sprzedawca                | Sprzedaz    | Drukarek |  58482 |             11 |         12 |
+|   95 | Hardy        | Benedykt    | Kierownik naukowy         | Zarzadzania | Drukarek |  59455 |              5 |         53 |
+|   96 | Pienkowski   | Dariusz     | Kierownik naukowy         | Zarzadzania | Kopiarek |  59455 |              3 |         26 |
+|   97 | Anczewski    | Stefan      | Glowny inzynier           | Inz.-Techn. | Drukarek |  61856 |              8 |          9 |
+|   98 | Pyza         | Andrzej     | Inzynier specjalista.     | Inz.-Techn. | Drukarek |  62590 |              3 |         32 |
+|   99 | Nowak        | Marek       | Sprzedawca                | Sprzedaz    | Kopiarek |  62981 |              2 |         24 |
+|  100 | Kacprzak     | Krzysztof   | Specjalista d/s naukowych | Zarzadzania | Drukarek |  64738 |             30 |         32 |
+|  101 | Kopernik     | Wieslaw     | Kierownik biura           | Admin.      | Drukarek |  65822 |              8 |         79 |
+|  102 | Baranowska   | Maria       | Mlodszy sprzedawca        | Sprzedaz    | Drukarek |  66603 |             12 |         13 |
+|  103 | sliwinska    | Zuzanna     | Starszy inzynier          | Inz.-Techn. | Faxow    |  67535 |              5 |         47 |
+|  104 | Leszczynska  | Maryla      | Starszy inzynier          | Inz.-Techn. | Kopiarek |  69070 |              3 |         32 |
+|  105 | Zach         | Karolina    | Inzynier specjalista.     | Inz.-Techn. | Kopiarek |  70935 |              2 |         16 |
+|  106 | Szafranska   | Zofia       | Kierownik sekcji          | Admin.      | Faxow    |  72820 |              4 |         39 |
+|  107 | Kaluza       | Agnieszka   | Kierownik zespolu         | Sprzedaz    | Drukarek |  77179 |              3 |         32 |
+|  107 | Zambrowicz   | Romuald     | Kierownik sekcji          | Admin.      | Drukarek |  79061 |              4 |         42 |
+|  109 | Rosiewicz    | Olgierd     | Inzynier specjalista.     | Inz.-Techn. | Faxow    |  79280 |             12 |         13 |
+|  110 | Pszczola     | Stefan      | Inzynier mechanik         | Inz.-Techn. | Kopiarek |  79307 |              1 |         11 |
+|  111 | Kadej        | Michal      | Kierownik zespolu         | Sprzedaz    | Kopiarek |  97096 |             10 |         11 |
+|  112 | Sobiecka     | Renata      | Kierownik zespolu         | Sprzedaz    | Faxow    | 104565 |             15 |         16 |
+|  113 | Zalesiak     | Mieczyslaw  | Glowny inzynier           | Inz.-Techn. | Kopiarek | 105753 |              6 |          8 |
+|  114 | zukowski     | Joe         | Kierownik sekcji          | Admin.      | Kopiarek | 116511 |              1 |          5 |
++------+--------------+-------------+---------------------------+-------------+----------+--------+----------------+------------+
+114 rows in set (0.00 sec)
+
+MariaDB [zadanie2]> 
+MariaDB [zadanie2]> 
+MariaDB [zadanie2]> g
+    -> 
+    -> h
+    -> g;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'g
+
+h
+g' at line 1
